@@ -1,4 +1,7 @@
 {
   // VS Code組み込みのものではなくプロジェクト配下のTypeScriptを使う
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // Prettierをデフォルトフォーマッターにする
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
