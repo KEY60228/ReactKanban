@@ -1,0 +1,4 @@
+{
+  // VS Code組み込みのものではなくプロジェクト配下のTypeScriptを使う
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
