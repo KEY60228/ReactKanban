@@ -5,7 +5,13 @@ import * as color from './color'
 export const Card = ({text}: {text?: string}) => {
   return (
     <Container>
-      {text}
+      {text?.split(/(https?:\/\/\S+)/g).map((fragment, i) => 
+        i % 2 === 0 ? (
+          <Text key={i}>{ fragment }</Text>
+        ) : (
+          <Link key={i} href={ fragment }>{ fragment }</Link>
+        )
+      )}
     </Container>
   )
 }
@@ -20,4 +26,21 @@ const Container = styled.div.attrs({
   padding: 8px 32px;
   background-color: ${color.White};
   cursor: move;
+`
+
+const Text = styled.span`
+  color: ${color.Black};
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+`
+
+const Link = styled.a.attrs({
+  target: '_blank',
+  rel: 'noopener noreferrer',
+})`
+  color: ${color.Blue};
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
 `

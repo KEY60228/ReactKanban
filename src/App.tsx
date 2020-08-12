@@ -2,7 +2,6 @@ import React from 'react'
 import { Header } from './Header'
 import { Column } from './Column'
 import styled from 'styled-components'
-import * as color from './color'
 
 export function App() {
   return (
@@ -11,7 +10,32 @@ export function App() {
 
       <MainArea>
         <HorizontalScroll>
-          <Column />
+          <Column 
+            title="ToDo"
+            cards={[
+              { id: 'a', text: '朝食を取る' },
+              { id: 'b', text: 'SNSをチェックする' },
+              { id: 'c', text: '布団に入る' },
+            ]}
+          />
+          <Column 
+            title="Doing"
+            cards={[
+              { id: 'd', text: '顔を洗う' },
+              { id: 'e', text: '歯を磨く' },
+            ]}
+          />
+          <Column 
+            title="Waiting"
+            cards={[
+            ]}
+          />
+          <Column 
+            title="Done"
+            cards={[
+              { id: 'f', text: '布団から出る'},
+            ]}
+          />
         </HorizontalScroll>
       </MainArea>
     </Container>

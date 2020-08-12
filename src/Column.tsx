@@ -4,20 +4,31 @@ import styled from 'styled-components'
 import * as color from './color'
 
 export const Column = ({
-  
+  title,
+  cards
+}: {
+  title?: string
+  cards: {
+    id: string
+    text?: string
+  }[]
 }) => {
   return (
     <Container>
       <Header>
-          <ColumnName></ColumnName>
+        <ColumnName>{ title }</ColumnName>
       </Header>
 
       <VerticalScroll>
-        <Card text='起きる'/>
+        { cards.map(({ id, text }) => {
+          return (
+            <Card key={ id } text={ text }/>
+          );
+        })}
       </VerticalScroll>
     </Container>
   )
-};
+}
 
 const Container = styled.div`
   diplay: flex;
@@ -44,13 +55,6 @@ const ColumnName = styled.div`
   color: ${color.Black};
   font-size: 14px;
   font-weight: bold;
-`
-
-const ColumnHeader = styled.div `
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 8px;
 `
 
 const VerticalScroll = styled.div`
