@@ -7,7 +7,7 @@ export const Header = ({ className }: { className?: string }) => {
   return (
     <Container className={className}>
       <Logo>Kanban Board</Logo>
-      <CardFilter/>
+      <CardFilter />
     </Container>
   )
 }

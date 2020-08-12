@@ -6,7 +6,7 @@ import { SearchIcon as _SearchIcon } from './icon'
 export const CardFilter = () => {
   return (
     <Container>
-      <SearchIcon/>
+      <SearchIcon />
       <Input placeholder="Filter cards" />
     </Container>
   )
