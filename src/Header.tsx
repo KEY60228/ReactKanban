@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import { CardFilter } from './CardFilter'
 import * as color from './color'
 
 export const Header = ({ className }: { className?: string }) => {
   return (
     <Container className={className}>
       <Logo>Kanban Board</Logo>
-      <CardFilter placeholder="Filter cards" />
+      <CardFilter/>
     </Container>
   )
 }
@@ -23,12 +24,4 @@ const Logo = styled.div`
   height: 100%;
   padding: 16px 0;
   overflow-y: auto;
-`
-
-const CardFilter = styled.input`
-  display: flex;
-  align-items: center;
-  min-width: 300px;
-  border: solid 1px ${color.Silver};
-  border-radius: 3px;
 `
