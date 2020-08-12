@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import * as color from './color'
+import { SearchIcon as _SearchIcon } from './icon'
 
 export const CardFilter = () => {
   return (
     <Container>
+      <SearchIcon/>
       <Input placeholder="Filter cards" />
     </Container>
   )
@@ -16,6 +18,12 @@ const Container = styled.label`
   min-width: 300px;
   border: solid 1px ${color.Silver};
   border-radius: 3px;
+`
+
+const SearchIcon = styled(_SearchIcon)`
+  margin: 0 4px 0 8px;
+  font-size: 16px;
+  color: ${color.Silver};
 `
 
 const Input = styled.input.attrs({ type: 'search' })`
