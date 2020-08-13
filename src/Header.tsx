@@ -21,7 +21,7 @@ const Container = styled.div`
 `
 
 const Logo = styled.div`
-  height: 100%;
-  padding: 16px 0;
-  overflow-y: auto;
+  color: ${color.Silver};
+  font-size: 16px;
+  font-weight: bold;
 `

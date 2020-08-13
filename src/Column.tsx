@@ -6,7 +6,7 @@ import { PlusIcon } from './icon'
 
 export const Column = ({
   title,
-  cards
+  cards,
 }: {
   title?: string
   cards: {
@@ -14,21 +14,19 @@ export const Column = ({
     text?: string
   }[]
 }) => {
-  const totalCount = cards.length;
+  const totalCount = cards.length
 
   return (
     <Container>
       <Header>
-        <CountBadge>{ totalCount }</CountBadge>
-        <ColumnName>{ title }</ColumnName>
-        <AddButton/>
+        <CountBadge>{totalCount}</CountBadge>
+        <ColumnName>{title}</ColumnName>
+        <AddButton />
       </Header>
 
       <VerticalScroll>
-        { cards.map(({ id, text }) => {
-          return (
-            <Card key={ id } text={ text }/>
-          );
+        {cards.map(({ id, text }) => {
+          return <Card key={id} text={text} />
         })}
       </VerticalScroll>
     </Container>

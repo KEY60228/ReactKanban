@@ -3,17 +3,19 @@ import styled from 'styled-components'
 import * as color from './color'
 import { CheckIcon as _CheckIcon, TrashIcon } from './icon'
 
-export const Card = ({text}: {text?: string}) => {
+export const Card = ({ text }: { text?: string }) => {
   return (
     <Container>
-      <CheckIcon/>
+      <CheckIcon />
 
-      {text?.split(/(https?:\/\/\S+)/g).map((fragment, i) => 
+      {text?.split(/(https?:\/\/\S+)/g).map((fragment, i) =>
         i % 2 === 0 ? (
-          <Text key={i}>{ fragment }</Text>
+          <Text key={i}>{fragment}</Text>
         ) : (
-          <Link key={i} href={ fragment }>{ fragment }</Link>
-        )
+          <Link key={i} href={fragment}>
+            {fragment}
+          </Link>
+        ),
       )}
 
       <DeleteButton />

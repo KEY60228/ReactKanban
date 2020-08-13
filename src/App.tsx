@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header } from './Header'
+import { Header as _Header } from './Header'
 import { Column } from './Column'
 import styled from 'styled-components'
 
@@ -10,7 +10,7 @@ export function App() {
 
       <MainArea>
         <HorizontalScroll>
-          <Column 
+          <Column
             title="ToDo"
             cards={[
               { id: 'a', text: '朝食を取る' },
@@ -18,24 +18,15 @@ export function App() {
               { id: 'c', text: '布団に入る' },
             ]}
           />
-          <Column 
+          <Column
             title="Doing"
             cards={[
               { id: 'd', text: '顔を洗う' },
               { id: 'e', text: '歯を磨く' },
             ]}
           />
-          <Column 
-            title="Waiting"
-            cards={[
-            ]}
-          />
-          <Column 
-            title="Done"
-            cards={[
-              { id: 'f', text: '布団から出る'},
-            ]}
-          />
+          <Column title="Waiting" cards={[]} />
+          <Column title="Done" cards={[{ id: 'f', text: '布団から出る' }]} />
         </HorizontalScroll>
       </MainArea>
     </Container>
@@ -46,6 +37,10 @@ const Container = styled.div`
   display: flex;
   flex-flow: column;
   height: 100%;
+`
+
+const Header = styled(_Header)`
+  flex-shrink: 0;
 `
 
 const MainArea = styled.div`
