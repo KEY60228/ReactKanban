@@ -1,10 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import * as color from './color'
+import { CheckIcon as _CheckIcon, TrashIcon } from './icon'
 
 export const Card = ({text}: {text?: string}) => {
   return (
     <Container>
+      <CheckIcon/>
+
       {text?.split(/(https?:\/\/\S+)/g).map((fragment, i) => 
         i % 2 === 0 ? (
           <Text key={i}>{ fragment }</Text>
@@ -12,6 +15,8 @@ export const Card = ({text}: {text?: string}) => {
           <Link key={i} href={ fragment }>{ fragment }</Link>
         )
       )}
+
+      <DeleteButton />
     </Container>
   )
 }
@@ -26,6 +31,28 @@ const Container = styled.div.attrs({
   padding: 8px 32px;
   background-color: ${color.White};
   cursor: move;
+`
+
+const CheckIcon = styled(_CheckIcon)`
+  position: absolute;
+  top: 12px;
+  left: 8px;
+  color: ${color.Green};
+`
+
+const DeleteButton = styled.button.attrs({
+  type: 'button',
+  children: <TrashIcon />,
+})`
+  position: absolute;
+  top: 12px;
+  right: 8px;
+  font-size: 14px;
+  color: ${color.Gray};
+
+  :hover {
+    color: ${color.Red};
+  }
 `
 
 const Text = styled.span`
