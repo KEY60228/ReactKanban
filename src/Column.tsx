@@ -2,6 +2,7 @@ import React from 'react'
 import { Card } from './Card'
 import styled from 'styled-components'
 import * as color from './color'
+import { PlusIcon } from './icon'
 
 export const Column = ({
   title,
@@ -13,10 +14,14 @@ export const Column = ({
     text?: string
   }[]
 }) => {
+  const totalCount = cards.length;
+
   return (
     <Container>
       <Header>
+        <CountBadge>{ totalCount }</CountBadge>
         <ColumnName>{ title }</ColumnName>
+        <AddButton/>
       </Header>
 
       <VerticalScroll>
@@ -51,10 +56,32 @@ const Header = styled.div`
   padding: 8px;
 `
 
+const CountBadge = styled.div`
+  margin-right: 8px;
+  border-radius: 20px;
+  padding: 2px 6px;
+  color: ${color.Black};
+  background-color: ${color.Silver};
+  font-size: 12px;
+  line-height: 1;
+`
+
 const ColumnName = styled.div`
   color: ${color.Black};
   font-size: 14px;
   font-weight: bold;
+`
+
+const AddButton = styled.button.attrs({
+  type: 'button',
+  children: <PlusIcon />,
+})`
+  margin-left: auto;
+  color: ${color.Black};
+
+  :hover {
+    color: ${color.Blue};
+  }
 `
 
 const VerticalScroll = styled.div`
