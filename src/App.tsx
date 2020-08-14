@@ -12,6 +12,7 @@ export function App() {
         <HorizontalScroll>
           <Column
             title="ToDo"
+            filterValue=" を る"
             cards={[
               { id: 'a', text: '朝食を取る' },
               { id: 'b', text: 'SNSをチェックする' },
