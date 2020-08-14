@@ -33,9 +33,8 @@ export const InputForm = ({
         value={ value }
         onChange={ ev => onChange?.(ev.currentTarget.value) }
         onKeyDown = {ev => {
-          if (!((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter')) {
-            return handleConfirm()
-          }
+          if (!((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter')) return
+          handleConfirm()
         }}
       />
 
