@@ -22,19 +22,7 @@ export const InputForm = ({
     onConfirm?.();
   }
 
-  const ref = useRef<HTMLTextAreaElement>(null)
-
-  useEffect(
-    () => {
-      const el = ref.current;
-      if (!el) return
-
-      const { borderTopWidth, borderBottomWidth } = getComputedStyle(el);
-      el.style.height = 'auto'
-      el.style.height = `calc(${borderTopWidth} + ${el.scrollHeight}px + ${borderBottomWidth})`
-    },
-    [ value ],
-  )
+  const ref = useAutoFitToContentHeight(value)
 
   return (
     <Container className={ className }>
@@ -57,6 +45,29 @@ export const InputForm = ({
       </ButtonRow>
     </Container>
   )
+}
+
+/**
+ * テキストエリアの高さの自動調整
+ * 
+ * @param content 
+ */
+const useAutoFitToContentHeight = (content: string|undefined) => {
+  const ref = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(
+    () => {
+      const el = ref.current;
+      if (!el) return
+
+      const { borderTopWidth, borderBottomWidth } = getComputedStyle(el);
+      el.style.height = 'auto'
+      el.style.height = `calc(${borderTopWidth} + ${el.scrollHeight}px + ${borderBottomWidth})`
+    },
+    [ content ],
+  )
+
+  return ref;
 }
 
 const Container = styled.div``;
