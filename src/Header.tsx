@@ -3,11 +3,19 @@ import styled from 'styled-components'
 import { CardFilter } from './CardFilter'
 import * as color from './color'
 
-export const Header = ({ className }: { className?: string }) => {
+export const Header = ({
+  filterValue,
+  onFilterChange,
+  className,
+}: {
+  filterValue?: string
+  onFilterChange?(value:string): void
+  className?: string
+}) => {
   return (
     <Container className={className}>
       <Logo>Kanban Board</Logo>
-      <CardFilter />
+      <CardFilter value={ filterValue } onChange={ onFilterChange }/>
     </Container>
   )
 }
