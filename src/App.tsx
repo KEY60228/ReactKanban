@@ -5,6 +5,82 @@ import styled from 'styled-components'
 
 export function App() {
   const [filterValue, setFilterValue] = useState('')
+  const [columns, setColumns] = useState([
+    {
+      id: 'A',
+      title: "ToDo",
+      cards: [
+        { id: 'a', text: '朝食を取る' },
+        { id: 'b', text: 'SNSをチェックする' },
+        { id: 'c', text: '布団に入る' },
+      ],
+    },
+    {
+      id: 'B',
+      title: "Doing",
+      cards: [
+        { id: 'd', text: '顔を洗う' },
+        { id: 'e', text: '歯を磨く' },
+      ],
+    },
+    {
+      id: 'C',
+      title: "Waiting",
+      cards: [],
+    },
+    {
+      id: 'D',
+      title: "Done",
+      cards: [
+        { id: 'f', text: '布団から出る' }
+      ],
+    },
+  ])
+
+  const [draggingCardID, setDraggingCardID] = useState<string|undefined>(undefined,)
+  const dropCardTo = (toID: string) => {
+    const fromID = draggingCardID
+    
+    if (!fromID) return
+    setDraggingCardID(undefined)
+    
+    if (fromID === toID) return
+    
+    setColumns (columns => {
+      const card = columns.flatMap(col => col.cards).find(c => c.id === fromID)
+      if (!card) {
+        return columns
+      }
+
+      return columns.map(column => {
+        let newColumn = column
+
+        if (newColumn.cards.some(c => c.id === fromID)) {
+          newColumn = {
+            ...newColumn,
+            cards: newColumn.cards.filter(c => c.id !== fromID),
+          }
+        }
+
+        // 列の末尾
+        if (newColumn.id === toID) {
+          newColumn = {
+            ...newColumn,
+            cards: [...newColumn.cards, card],
+          }
+        }
+        // 列の末尾以外
+        else if (newColumn.cards.some(c => c.id === toID)) {
+          newColumn = {
+            ...newColumn,
+            cards: newColumn.cards.flatMap(c => c.id === toID ? [card,c] : [c],)
+          }
+        }
+
+        return newColumn
+      })
+    })
+  }
 
   return (
     <Container>
@@ -12,33 +88,16 @@ export function App() {
 
       <MainArea>
         <HorizontalScroll>
-          <Column
-            title="ToDo"
-            filterValue={ filterValue }
-            cards={[
-              { id: 'a', text: '朝食を取る' },
-              { id: 'b', text: 'SNSをチェックする' },
-              { id: 'c', text: '布団に入る' },
-            ]}
-          />
-          <Column
-            title="Doing"
-            filterValue={ filterValue }
-            cards={[
-              { id: 'd', text: '顔を洗う' },
-              { id: 'e', text: '歯を磨く' },
-            ]}
-          />
-          <Column 
-            title="Waiting" 
-            cards={[]} 
-            filterValue={ filterValue }
-          />
-          <Column
-            title="Done"
-            cards={[{ id: 'f', text: '布団から出る' }]}
-            filterValue={ filterValue }
-          />
+          { columns.map(({ id: columnID, title, cards }) => (
+            <Column
+              key={ columnID }
+              title={ title }
+              filterValue={ filterValue }
+              cards={ cards }
+              onCardDragStart={ cardID => setDraggingCardID(cardID) }
+              onCardDrop={ entered => dropCardTo(entered ?? columnID) }
+            />
+          ))}
         </HorizontalScroll>
       </MainArea>
     </Container>
