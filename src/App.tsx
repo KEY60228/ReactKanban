@@ -6,6 +6,7 @@ import produce from 'immer'
 import { DeleteDialog } from './DeleteDialog'
 import { Overlay as _Overlay } from './Overlay'
 import { randomID } from './util'
+import { api } from './api'
 
 export function App() {
   const [filterValue, setFilterValue] = useState('')
@@ -98,6 +99,10 @@ export function App() {
   }
 
   const addCard = (columnID: string) => {
+    const column = columns.find(c => c.id === columnID)
+    if (!column) return
+
+    const text = column.text
     const cardID = randomID()
 
     type Columns = typeof columns
@@ -113,6 +118,11 @@ export function App() {
         column.text = ''
       })
     )
+
+    api('POST /v1/cards', {
+      id: cardID,
+      text,
+    })
   }
 
   const [deletingCardID, setDeletingCardID] = useState<string | undefined>(
