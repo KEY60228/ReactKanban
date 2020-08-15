@@ -12,6 +12,7 @@ export function App() {
     {
       id: 'A',
       title: 'ToDo',
+      text: '',
       cards: [
         { id: 'a', text: '朝食を取る' },
         { id: 'b', text: 'SNSをチェックする' },
@@ -21,6 +22,7 @@ export function App() {
     {
       id: 'B',
       title: 'Doing',
+      text: '',
       cards: [
         { id: 'd', text: '顔を洗う' },
         { id: 'e', text: '歯を磨く' },
@@ -29,11 +31,13 @@ export function App() {
     {
       id: 'C',
       title: 'Waiting',
+      text: '',
       cards: [],
     },
     {
       id: 'D',
       title: 'Done',
+      text: '',
       cards: [{ id: 'f', text: '布団から出る' }],
     },
   ])
@@ -80,6 +84,18 @@ export function App() {
     )
   }
 
+  const setText = (columnID: string, value: string) => {
+    type Columns = typeof columns
+    setColumns(
+      produce((columns: Columns) => {
+        const column = columns.find(c => c.id === columnID)
+        if (!column) return
+
+        column.text = value
+      }),
+    )
+  }
+
   const [deletingCardID, setDeletingCardID] = useState<string | undefined>(
     undefined,
   )
@@ -107,7 +123,7 @@ export function App() {
 
       <MainArea>
         <HorizontalScroll>
-          {columns.map(({ id: columnID, title, cards }) => (
+          {columns.map(({ id: columnID, title, cards, text }) => (
             <Column
               key={columnID}
               title={title}
@@ -116,6 +132,8 @@ export function App() {
               onCardDragStart={cardID => setDraggingCardID(cardID)}
               onCardDrop={entered => dropCardTo(entered ?? columnID)}
               onCardDeleteClick={cardID => setDeletingCardID(cardID)}
+              text={ text }
+              onTextChange={value => setText(columnID, value)}
             />
           ))}
         </HorizontalScroll>
