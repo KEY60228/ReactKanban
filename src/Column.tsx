@@ -50,9 +50,13 @@ export const Column = ({
       { filterValue && <ResultCount>{cards.length} results</ResultCount>}
 
       <VerticalScroll>
-        {cards.map(({ id, text }) => {
-          return <Card key={id} text={text} />
-        })}
+        {cards.map(({ id, text }) => (
+          <Card.DropArea key={id}>
+            <Card text={ text }/>
+          </Card.DropArea>
+        ))}
+
+        <Card.DropArea style={{ height: '100%' }}/>
       </VerticalScroll>
     </Container>
   )
