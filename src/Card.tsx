@@ -14,7 +14,7 @@ export const Card = ({
   onDragEnd?(): void
   onDeleteClick?(): void
 }) => {
-  const [drag, setDrag] = useState(false);
+  const [drag, setDrag] = useState(false)
 
   return (
     <Container
@@ -40,7 +40,7 @@ export const Card = ({
         ),
       )}
 
-      <DeleteButton onClick={ onDeleteClick }/>
+      <DeleteButton onClick={onDeleteClick} />
     </Container>
   )
 }
@@ -109,16 +109,16 @@ const DropArea = ({
   className?: string
   style?: React.CSSProperties
 }) => {
-  const [isTarget, setIsTarget] = useState(false);
+  const [isTarget, setIsTarget] = useState(false)
   const visible = !disabled && isTarget
 
   const [dragOver, onDragOver] = useDragAutoLeave()
 
   return (
     <DropAreaContainer
-      style={ style }
-      className={ className }
-      onDragOver={ ev => {
+      style={style}
+      className={className}
+      onDragOver={ev => {
         if (disabled) return
         ev.preventDefault()
         onDragOver(() => {
@@ -127,7 +127,7 @@ const DropArea = ({
       }}
       onDragEnter={() => {
         if (disabled || dragOver.current) return
-        setIsTarget(true);
+        setIsTarget(true)
       }}
       onDrop={() => {
         if (disabled) return
@@ -142,7 +142,7 @@ const DropArea = ({
         }}
       />
 
-      { children }
+      {children}
     </DropAreaContainer>
   )
 }
@@ -150,7 +150,7 @@ const DropArea = ({
 /**
  * dragOverイベントが継続中かどうかのフラグをrefとして返す
  * timeout経過後に自動でフラグがfalseになる
- * 
+ *
  * @param timeout 自動でフラグをfalseにするまでの時間 (ms)
  */
 const useDragAutoLeave = (timeout: number = 100) => {

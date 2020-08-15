@@ -11,7 +11,7 @@ export function App() {
   const [columns, setColumns] = useState([
     {
       id: 'A',
-      title: "ToDo",
+      title: 'ToDo',
       cards: [
         { id: 'a', text: '朝食を取る' },
         { id: 'b', text: 'SNSをチェックする' },
@@ -20,7 +20,7 @@ export function App() {
     },
     {
       id: 'B',
-      title: "Doing",
+      title: 'Doing',
       cards: [
         { id: 'd', text: '顔を洗う' },
         { id: 'e', text: '歯を磨く' },
@@ -28,41 +28,47 @@ export function App() {
     },
     {
       id: 'C',
-      title: "Waiting",
+      title: 'Waiting',
       cards: [],
     },
     {
       id: 'D',
-      title: "Done",
-      cards: [
-        { id: 'f', text: '布団から出る' }
-      ],
+      title: 'Done',
+      cards: [{ id: 'f', text: '布団から出る' }],
     },
   ])
 
-  const [draggingCardID, setDraggingCardID] = useState<string|undefined>(undefined,)
+  const [draggingCardID, setDraggingCardID] = useState<string | undefined>(
+    undefined,
+  )
 
   const dropCardTo = (toID: string) => {
     const fromID = draggingCardID
-    
+
     if (!fromID) return
     setDraggingCardID(undefined)
-    
+
     if (fromID === toID) return
-    
+
     type Columns = typeof columns
 
     setColumns(
       produce((columns: Columns) => {
-        const card = columns.flatMap(col => col.cards).find(c => c.id === fromID)
+        const card = columns
+          .flatMap(col => col.cards)
+          .find(c => c.id === fromID)
         if (!card) return
 
-        const fromColumn = columns.find (col => col.cards.some(c => c.id === fromID))
+        const fromColumn = columns.find(col =>
+          col.cards.some(c => c.id === fromID),
+        )
         if (!fromColumn) return
 
         fromColumn.cards = fromColumn.cards.filter(c => c.id !== fromID)
 
-        const toColumn = columns.find(col => col.id === toID || col.cards.some(c => c.id === toID))
+        const toColumn = columns.find(
+          col => col.id === toID || col.cards.some(c => c.id === toID),
+        )
         if (!toColumn) return
 
         let index = toColumn.cards.findIndex(c => c.id === toID)
@@ -74,32 +80,51 @@ export function App() {
     )
   }
 
-  const [deletingCardID, setDeletingCardID] = useState<string|undefined>(undefined,)
+  const [deletingCardID, setDeletingCardID] = useState<string | undefined>(
+    undefined,
+  )
+
+  const deleteCard = () => {
+    const cardID = deletingCardID
+    if (!cardID) return
+
+    setDeletingCardID(undefined)
+
+    type Columns = typeof columns
+    setColumns(
+      produce((columns: Columns) => {
+        const column = columns.find(col => col.cards.some(c => c.id === cardID))
+        if (!column) return
+
+        column.cards = column.cards.filter(c => c.id !== cardID)
+      }),
+    )
+  }
 
   return (
     <Container>
-      <Header filterValue={filterValue} onFilterChange={setFilterValue}/>
+      <Header filterValue={filterValue} onFilterChange={setFilterValue} />
 
       <MainArea>
         <HorizontalScroll>
-          { columns.map(({ id: columnID, title, cards }) => (
+          {columns.map(({ id: columnID, title, cards }) => (
             <Column
-              key={ columnID }
-              title={ title }
-              filterValue={ filterValue }
-              cards={ cards }
-              onCardDragStart={ cardID => setDraggingCardID(cardID) }
-              onCardDrop={ entered => dropCardTo(entered ?? columnID) }
-              onCardDeleteClick={ cardID => setDeletingCardID(cardID) }
+              key={columnID}
+              title={title}
+              filterValue={filterValue}
+              cards={cards}
+              onCardDragStart={cardID => setDraggingCardID(cardID)}
+              onCardDrop={entered => dropCardTo(entered ?? columnID)}
+              onCardDeleteClick={cardID => setDeletingCardID(cardID)}
             />
           ))}
         </HorizontalScroll>
       </MainArea>
 
-      { deletingCardID && (
+      {deletingCardID && (
         <Overlay onClick={() => setDeletingCardID(undefined)}>
-          <DeleteDialog 
-            onConfirm={() => setDeletingCardID(undefined)}
+          <DeleteDialog
+            onConfirm={deleteCard}
             onCancel={() => setDeletingCardID(undefined)}
           />
         </Overlay>

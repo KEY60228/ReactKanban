@@ -7,15 +7,15 @@ export const CardFilter = ({
   value,
   onChange,
 }: {
-  value?: string,
+  value?: string
   onChange?(value: string): void
 }) => {
   return (
     <Container>
       <SearchIcon />
-      <Input 
+      <Input
         placeholder="Filter cards"
-        value={ value }
+        value={value}
         onChange={ev => onChange?.(ev.currentTarget.value)}
       />
     </Container>

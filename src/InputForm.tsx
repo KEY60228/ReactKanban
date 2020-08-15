@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
-import styled from 'styled-components';
-import * as color from './color';
-import { Button, ConfirmButton } from './Button';
+import React, { useRef, useEffect } from 'react'
+import styled from 'styled-components'
+import * as color from './color'
+import { Button, ConfirmButton } from './Button'
 
 export const InputForm = ({
   value,
@@ -10,37 +10,37 @@ export const InputForm = ({
   onCancel,
   className,
 }: {
-  value?: string,
-  onChange?(value: string): void,
-  onConfirm?(): void,
-  onCancel?(): void,
+  value?: string
+  onChange?(value: string): void
+  onConfirm?(): void
+  onCancel?(): void
   className?: string
 }) => {
-  const disabled = !value?.trim();
+  const disabled = !value?.trim()
   const handleConfirm = () => {
-    if (disabled) return;
-    onConfirm?.();
+    if (disabled) return
+    onConfirm?.()
   }
 
   const ref = useAutoFitToContentHeight(value)
 
   return (
-    <Container className={ className }>
+    <Container className={className}>
       <Input
         ref={ref}
         autoFocus
         placeholder="Enter a note"
-        value={ value }
-        onChange={ ev => onChange?.(ev.currentTarget.value) }
-        onKeyDown = {ev => {
+        value={value}
+        onChange={ev => onChange?.(ev.currentTarget.value)}
+        onKeyDown={ev => {
           if (!((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter')) return
           handleConfirm()
         }}
       />
 
       <ButtonRow>
-        <AddButton disabled={ disabled } onClick={ handleConfirm }/>
-        <CancelButton onClick={ onCancel }/>
+        <AddButton disabled={disabled} onClick={handleConfirm} />
+        <CancelButton onClick={onCancel} />
       </ButtonRow>
     </Container>
   )
@@ -48,28 +48,25 @@ export const InputForm = ({
 
 /**
  * テキストエリアの高さの自動調整
- * 
- * @param content 
+ *
+ * @param content
  */
-const useAutoFitToContentHeight = (content: string|undefined) => {
+const useAutoFitToContentHeight = (content: string | undefined) => {
   const ref = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(
-    () => {
-      const el = ref.current;
-      if (!el) return
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
 
-      const { borderTopWidth, borderBottomWidth } = getComputedStyle(el);
-      el.style.height = 'auto'
-      el.style.height = `calc(${borderTopWidth} + ${el.scrollHeight}px + ${borderBottomWidth})`
-    },
-    [ content ],
-  )
+    const { borderTopWidth, borderBottomWidth } = getComputedStyle(el)
+    el.style.height = 'auto'
+    el.style.height = `calc(${borderTopWidth} + ${el.scrollHeight}px + ${borderBottomWidth})`
+  }, [content])
 
-  return ref;
+  return ref
 }
 
-const Container = styled.div``;
+const Container = styled.div``
 
 const Input = styled.textarea`
   display: block;

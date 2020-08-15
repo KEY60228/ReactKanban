@@ -13,12 +13,12 @@ export const DeleteDialog = ({
   className?: string
 }) => {
   return (
-    <Container className={ className }>
+    <Container className={className}>
       <Message>Are you sure to delete?</Message>
 
       <ButtonRow>
-        <DeleteButton onClick={ onConfirm }/>
-        <CancelButton autoFocus onClick={ onCancel }/>
+        <DeleteButton onClick={onConfirm} />
+        <CancelButton autoFocus onClick={onCancel} />
       </ButtonRow>
     </Container>
   )

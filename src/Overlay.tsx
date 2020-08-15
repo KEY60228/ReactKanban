@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export const Overlay = ({
   onClick,
   className,
-  children
+  children,
 }: {
   onClick?(): void
   className?: string
@@ -12,13 +12,13 @@ export const Overlay = ({
 }) => {
   return (
     <Container
-      className={ className }
-      onClick={ ev => {
+      className={className}
+      onClick={ev => {
         if (ev.target !== ev.currentTarget) return
         onClick?.()
       }}
     >
-      { children }
+      {children}
     </Container>
   )
 }
