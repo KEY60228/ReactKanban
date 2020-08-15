@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Header as _Header } from './Header'
 import { Column } from './Column'
 import styled from 'styled-components'
+import produce from 'immer'
 
 export function App() {
   const [filterValue, setFilterValue] = useState('')
@@ -38,6 +39,7 @@ export function App() {
   ])
 
   const [draggingCardID, setDraggingCardID] = useState<string|undefined>(undefined,)
+
   const dropCardTo = (toID: string) => {
     const fromID = draggingCardID
     
@@ -46,40 +48,28 @@ export function App() {
     
     if (fromID === toID) return
     
-    setColumns (columns => {
-      const card = columns.flatMap(col => col.cards).find(c => c.id === fromID)
-      if (!card) {
-        return columns
-      }
+    type Columns = typeof columns
 
-      return columns.map(column => {
-        let newColumn = column
+    setColumns(
+      produce((columns: Columns) => {
+        const card = columns.flatMap(col => col.cards).find(c => c.id === fromID)
+        if (!card) return
 
-        if (newColumn.cards.some(c => c.id === fromID)) {
-          newColumn = {
-            ...newColumn,
-            cards: newColumn.cards.filter(c => c.id !== fromID),
-          }
+        const fromColumn = columns.find (col => col.cards.some(c => c.id === fromID))
+        if (!fromColumn) return
+
+        fromColumn.cards = fromColumn.cards.filter(c => c.id !== fromID)
+
+        const toColumn = columns.find(col => col.id === toID || col.cards.some(c => c.id === toID))
+        if (!toColumn) return
+
+        let index = toColumn.cards.findIndex(c => c.id === toID)
+        if (index < 0) {
+          index = toColumn.cards.length
         }
-
-        // 列の末尾
-        if (newColumn.id === toID) {
-          newColumn = {
-            ...newColumn,
-            cards: [...newColumn.cards, card],
-          }
-        }
-        // 列の末尾以外
-        else if (newColumn.cards.some(c => c.id === toID)) {
-          newColumn = {
-            ...newColumn,
-            cards: newColumn.cards.flatMap(c => c.id === toID ? [card,c] : [c],)
-          }
-        }
-
-        return newColumn
-      })
-    })
+        toColumn.cards.splice(index, 0, card)
+      }),
+    )
   }
 
   return (
