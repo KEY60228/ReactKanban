@@ -116,7 +116,7 @@ export function App() {
           text: column.text,
         })
         column.text = ''
-      })
+      }),
     )
 
     api('POST /v1/cards', {
@@ -161,7 +161,7 @@ export function App() {
               onCardDragStart={cardID => setDraggingCardID(cardID)}
               onCardDrop={entered => dropCardTo(entered ?? columnID)}
               onCardDeleteClick={cardID => setDeletingCardID(cardID)}
-              text={ text }
+              text={text}
               onTextChange={value => setText(columnID, value)}
               onTextConfirm={() => addCard(columnID)}
             />

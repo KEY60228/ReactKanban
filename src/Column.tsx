@@ -15,7 +15,7 @@ export const Column = ({
   text,
   onTextChange,
   onTextConfirm,
-  onTextCancel
+  onTextCancel,
 }: {
   title?: string
   filterValue?: string
@@ -28,8 +28,8 @@ export const Column = ({
   onCardDeleteClick?(id: string): void
   text?: string
   onTextChange?(value: string): void
-  onTextConfirm?():void
-  onTextCancel?():void
+  onTextConfirm?(): void
+  onTextCancel?(): void
 }) => {
   const filterValue = rawFilterValue?.trim()
   const keywords = filterValue?.toLowerCase().split(/\s+/g) ?? []
@@ -38,7 +38,7 @@ export const Column = ({
   )
 
   const totalCount = rawCards.length
-  
+
   const [inputMode, setInputMode] = useState(false)
 
   const toggleInput = () => setInputMode(v => !v)

@@ -11,9 +11,9 @@ export type ReqAndRes = {
   }
 }
 
-export const Endpoint = 'http://localhost:3000/api'
+export const Endpoint = process.env.API_ENDPOINT || 'http://localhost:3000/api'
 
-export async function api<K extends keyof ReqAndRes> (
+export async function api<K extends keyof ReqAndRes>(
   key: K,
   payload: ReqAndRes[K]['req'],
 ): Promise<ReqAndRes[K]['res']> {
@@ -23,7 +23,7 @@ export async function api<K extends keyof ReqAndRes> (
   }
 
   let pathWithID = ''
-  const option:RequestInit = { method }
+  const option: RequestInit = { method }
 
   switch (option.method) {
     case 'GET':
@@ -35,7 +35,7 @@ export async function api<K extends keyof ReqAndRes> (
       break
 
     case 'POST':
-      option.headers = {'Content-Type': 'application/json'}
+      option.headers = { 'Content-Type': 'application/json' }
       option.body = JSON.stringify(payload)
       break
 
@@ -43,23 +43,27 @@ export async function api<K extends keyof ReqAndRes> (
       if (payload && 'id' in payload) {
         pathWithID = `${path}/${payload.id}`
       }
-      option.headers = {'Content-Type': 'application/json'}
+      option.headers = { 'Content-Type': 'application/json' }
       option.body = JSON.stringify(payload)
       break
   }
 
-  return fetch(`${Endpoint}${pathWithID || path}`, option).then(res => res.ok ? res.json() : res.text().then(text => {
-    throw new APIError(
-      method,
-      res.url,
-      res.status,
-      res.statusText,
-      res.ok,
-      res.redirected,
-      res.type,
-      text,
-    )
-  }),)
+  return fetch(`${Endpoint}${pathWithID || path}`, option).then(res =>
+    res.ok
+      ? res.json()
+      : res.text().then(text => {
+          throw new APIError(
+            method,
+            res.url,
+            res.status,
+            res.statusText,
+            res.ok,
+            res.redirected,
+            res.type,
+            text,
+          )
+        }),
+  )
 }
 
 export class APIError extends Error {
