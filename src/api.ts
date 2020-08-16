@@ -48,7 +48,6 @@ export async function api<K extends keyof ReqAndRes>(
 
   switch (option.method) {
     case 'GET':
-
     case 'DELETE':
       if (payload && 'id' in payload) {
         pathWithID = `${path}/${payload.id}`
