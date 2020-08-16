@@ -41,16 +41,12 @@
     {
       "id": "-wkumDeruhSx",
       "text": "布団に入る\n(:3[___]"
-    },
-    {
-      "id": "WgbVgEIjSoMx",
-      "text": "NEW!"
     }
   ],
   "cardsOrder": {
     "cXrtw5n8-FsB": "ulnuLLt5TN93",
     "w7DTqK1QQKTI": "TsXP5w9qLeM-",
-    "bfrqTfEydU38": "WgbVgEIjSoMx",
+    "bfrqTfEydU38": "bfrqTfEydU38",
     "dfwMbxZS0EmM": "7lR4Vd3EYixP",
     "7lR4Vd3EYixP": "dfwMbxZS0EmM",
     "TsXP5w9qLeM-": "rh022hj9zG58",
@@ -58,6 +54,6 @@
     "3NRSLMq49xvT": "-wkumDeruhSx",
     "ulnuLLt5TN93": "3NRSLMq49xvT",
     "-wkumDeruhSx": "cXrtw5n8-FsB",
-    "WgbVgEIjSoMx": "bfrqTfEydU38"
+    "WgbVgEIjSoMx": null
   }
 }
