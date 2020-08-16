@@ -6,27 +6,27 @@ import produce from 'immer'
 import { DeleteDialog } from './DeleteDialog'
 import { Overlay as _Overlay } from './Overlay'
 import { randomID, sortBy, reorderPatch } from './util'
-import { api } from './api'
+import { api, ColumnID, CardID } from './api'
 
 type State = {
   columns?: {
-    id: string
+    id: ColumnID
     title?: string
     text?: string
     cards?: {
-      id: string
+      id: CardID
       text?: string
     }[]
   }[]
-  cardsOrder: Record<string, string>
+  cardsOrder: Record<string, CardID | ColumnID>
 }
 
 export function App() {
   const [filterValue, setFilterValue] = useState('')
-  const [{columns, cardsOrder}, setData] = useState<State>({ cardsOrder: {}})
+  const [{ columns, cardsOrder }, setData] = useState<State>({ cardsOrder: {} })
 
   useEffect(() => {
-    ;(async() => {
+    ;(async () => {
       const columns = await api('GET /v1/columns', null)
 
       setData(
@@ -37,9 +37,9 @@ export function App() {
 
       const [unorderedCards, cardsOrder] = await Promise.all([
         api('GET /v1/cards', null),
-        api('GET /v1/cardsOrder', null)
+        api('GET /v1/cardsOrder', null),
       ])
-      
+
       setData(
         produce((draft: State) => {
           draft.cardsOrder = cardsOrder
@@ -51,11 +51,11 @@ export function App() {
     })()
   }, [])
 
-  const [draggingCardID, setDraggingCardID] = useState<string | undefined>(
+  const [draggingCardID, setDraggingCardID] = useState<CardID | undefined>(
     undefined,
   )
 
-  const dropCardTo = (toID: string) => {
+  const dropCardTo = (toID: CardID | ColumnID) => {
     const fromID = draggingCardID
 
     if (!fromID) return
@@ -82,7 +82,7 @@ export function App() {
     api('PATCH /v1/cardsOrder', patch)
   }
 
-  const setText = (columnID: string, value: string) => {
+  const setText = (columnID: ColumnID, value: string) => {
     setData(
       produce((draft: State) => {
         const column = draft.columns?.find(c => c.id === columnID)
@@ -93,12 +93,12 @@ export function App() {
     )
   }
 
-  const addCard = (columnID: string) => {
+  const addCard = (columnID: ColumnID) => {
     const column = columns?.find(c => c.id === columnID)
     if (!column) return
 
     const text = column.text
-    const cardID = randomID()
+    const cardID = randomID() as CardID
 
     const patch = reorderPatch(cardsOrder, cardID, cardsOrder[columnID])
 
@@ -127,7 +127,7 @@ export function App() {
     api('PATCH /v1/cardsOrder', patch)
   }
 
-  const [deletingCardID, setDeletingCardID] = useState<string | undefined>(
+  const [deletingCardID, setDeletingCardID] = useState<CardID | undefined>(
     undefined,
   )
 
@@ -139,7 +139,9 @@ export function App() {
 
     setData(
       produce((draft: State) => {
-        const column = draft.columns?.find(col => col.cards?.some(c => c.id === cardID))
+        const column = draft.columns?.find(col =>
+          col.cards?.some(c => c.id === cardID),
+        )
         if (!column) return
 
         column.cards = column.cards?.filter(c => c.id !== cardID)
@@ -154,8 +156,8 @@ export function App() {
       <MainArea>
         <HorizontalScroll>
           {!columns ? (
-            <Loading/>
-          ): (
+            <Loading />
+          ) : (
             columns.map(({ id: columnID, title, cards, text }) => (
               <Column
                 key={columnID}

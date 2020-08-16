@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import * as color from './color'
 import { PlusIcon } from './icon'
 import { InputForm as _InputForm } from './InputForm'
+import { CardID } from './api'
 
 export const Column = ({
   title,
@@ -20,12 +21,12 @@ export const Column = ({
   title?: string
   filterValue?: string
   cards?: {
-    id: string
+    id: CardID
     text?: string
   }[]
-  onCardDragStart?(id: string): void
-  onCardDrop?(entered: string | null): void
-  onCardDeleteClick?(id: string): void
+  onCardDragStart?(id: CardID): void
+  onCardDrop?(entered: CardID | null): void
+  onCardDeleteClick?(id: CardID): void
   text?: string
   onTextChange?(value: string): void
   onTextConfirm?(): void
@@ -49,11 +50,11 @@ export const Column = ({
     onTextCancel?.()
   }
 
-  const [draggingCardID, setDraggingCardID] = useState<string | undefined>(
+  const [draggingCardID, setDraggingCardID] = useState<CardID | undefined>(
     undefined,
   )
 
-  const handleCardDragStart = (id: string) => {
+  const handleCardDragStart = (id: CardID) => {
     setDraggingCardID(id)
     onCardDragStart?.(id)
   }
@@ -61,7 +62,7 @@ export const Column = ({
   return (
     <Container>
       <Header>
-        { totalCount >= 0 && <CountBadge>{totalCount}</CountBadge>}
+        {totalCount >= 0 && <CountBadge>{totalCount}</CountBadge>}
         <ColumnName>{title}</ColumnName>
         <AddButton onClick={toggleInput} />
       </Header>
@@ -75,10 +76,9 @@ export const Column = ({
         />
       )}
 
-
       {!cards ? (
-        <Loading/>
-      ): (
+        <Loading />
+      ) : (
         <>
           {filterValue && <ResultCount>{cards.length} results</ResultCount>}
 
@@ -174,7 +174,7 @@ const Loading = styled.div.attrs({
 })`
   padding: 8px;
   font-size: 14px;
-` 
+`
 
 const ResultCount = styled.div`
   color: ${color.Black};
