@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Header as _Header } from './Header'
 import { Column } from './Column'
 import styled from 'styled-components'
@@ -8,41 +8,37 @@ import { Overlay as _Overlay } from './Overlay'
 import { randomID } from './util'
 import { api } from './api'
 
+type Columns = {
+  id: string
+  title?: string
+  text?: string
+  cards?: {
+    id: string
+    text?: string
+  }[]
+}[]
+
 export function App() {
   const [filterValue, setFilterValue] = useState('')
-  const [columns, setColumns] = useState([
-    {
-      id: 'A',
-      title: 'ToDo',
-      text: '',
-      cards: [
-        { id: 'a', text: '朝食を取る' },
-        { id: 'b', text: 'SNSをチェックする' },
-        { id: 'c', text: '布団に入る' },
-      ],
-    },
-    {
-      id: 'B',
-      title: 'Doing',
-      text: '',
-      cards: [
-        { id: 'd', text: '顔を洗う' },
-        { id: 'e', text: '歯を磨く' },
-      ],
-    },
-    {
-      id: 'C',
-      title: 'Waiting',
-      text: '',
-      cards: [],
-    },
-    {
-      id: 'D',
-      title: 'Done',
-      text: '',
-      cards: [{ id: 'f', text: '布団から出る' }],
-    },
-  ])
+  const [columns, setColumns] = useState<Columns>([])
+
+  useEffect(() => {
+    ;(async() => {
+      const columns = await api('GET /v1/columns', null)
+
+      setColumns(columns)
+
+      const unorderedCards = await api('GET /v1/cards', null)
+
+      setColumns(
+        produce((columns: Columns) => {
+          columns.forEach(column => {
+            column.cards = unorderedCards
+          })
+        }),
+      )
+    })()
+  }, [])
 
   const [draggingCardID, setDraggingCardID] = useState<string | undefined>(
     undefined,
@@ -56,26 +52,24 @@ export function App() {
 
     if (fromID === toID) return
 
-    type Columns = typeof columns
-
     setColumns(
       produce((columns: Columns) => {
         const card = columns
-          .flatMap(col => col.cards)
+          .flatMap(col => col.cards ?? [])
           .find(c => c.id === fromID)
         if (!card) return
 
         const fromColumn = columns.find(col =>
-          col.cards.some(c => c.id === fromID),
+          col.cards?.some(c => c.id === fromID),
         )
-        if (!fromColumn) return
+        if (!fromColumn?.cards) return
 
         fromColumn.cards = fromColumn.cards.filter(c => c.id !== fromID)
 
         const toColumn = columns.find(
-          col => col.id === toID || col.cards.some(c => c.id === toID),
+          col => col.id === toID || col.cards?.some(c => c.id === toID),
         )
-        if (!toColumn) return
+        if (!toColumn?.cards) return
 
         let index = toColumn.cards.findIndex(c => c.id === toID)
         if (index < 0) {
@@ -87,7 +81,6 @@ export function App() {
   }
 
   const setText = (columnID: string, value: string) => {
-    type Columns = typeof columns
     setColumns(
       produce((columns: Columns) => {
         const column = columns.find(c => c.id === columnID)
@@ -105,13 +98,12 @@ export function App() {
     const text = column.text
     const cardID = randomID()
 
-    type Columns = typeof columns
     setColumns(
       produce((columns: Columns) => {
         const column = columns.find(c => c.id === columnID)
         if (!column) return
 
-        column.cards.unshift({
+        column.cards?.unshift({
           id: cardID,
           text: column.text,
         })
@@ -135,13 +127,12 @@ export function App() {
 
     setDeletingCardID(undefined)
 
-    type Columns = typeof columns
     setColumns(
       produce((columns: Columns) => {
-        const column = columns.find(col => col.cards.some(c => c.id === cardID))
+        const column = columns.find(col => col.cards?.some(c => c.id === cardID))
         if (!column) return
 
-        column.cards = column.cards.filter(c => c.id !== cardID)
+        column.cards = column.cards?.filter(c => c.id !== cardID)
       }),
     )
   }
