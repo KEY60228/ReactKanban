@@ -36,3 +36,36 @@ export function sortBy<E extends { id: Exclude<V, null>}, V extends string|null>
 
   return sorted
 }
+
+/**
+ * リストの順序情報を並び替える PATCHリクエストのための情報を生成する
+ * 
+ * @param order リストの順序情報
+ * @param id 移動対象のID
+ * @param toID 移動先のID
+ */
+export function reorderPatch<V extends string|null> (
+  order: Record<string, V>,
+  id: Exclude<V, null>,
+  toID: V = null as V,
+) {
+  const patch: Record<string, V> = {}
+  if (id === toID || order[id] === toID) {
+    return patch
+  }
+  
+  const [deleteKey] = Object.entries(order).find(([, v]) => v && v === id) || []
+  if (deleteKey) {
+    patch[deleteKey] = order[id]
+  }
+  
+  const [insertKey] = Object.entries(order).find(([, v]) => v && v === toID) || []
+  if (insertKey) {
+    patch[insertKey] = id as V
+  }
+  
+  patch[id] = toID as V
+  
+  return patch
+}
+
