@@ -20,5 +20,11 @@ export const reducer: Reducer<
   State,
   Action
 > = produce((draft: State, action: Action) => {
-
+  switch (action.type) {
+    case 'Filter.SetFilter': {
+      const { value } = action.payload
+      draft.filterValue = value
+      return
+    }
+  }
 }, initialState)
