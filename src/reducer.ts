@@ -1,5 +1,6 @@
 import { Reducer } from 'redux'
 import produce from 'immer'
+import { sortBy } from './util'
 import { CardID, ColumnID } from './api'
 
 export type State = {
@@ -58,10 +59,17 @@ export const reducer: Reducer<
     }
 
     case 'App.SetColumns': {
+      const { columns } = action.payload
+      draft.columns = columns
       return
     }
 
     case 'App.SetCards': {
+      const { cards: unorderedCards, cardsOrder } = action.payload
+      draft.cardsOrder = cardsOrder
+      draft.columns?.forEach(column => {
+        column.cards = sortBy(unorderedCards, cardsOrder, column.id)
+      })
       return
     }
 
