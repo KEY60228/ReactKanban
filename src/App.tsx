@@ -8,7 +8,6 @@ import { Overlay as _Overlay } from './Overlay'
 import { randomID, sortBy, reorderPatch } from './util'
 import { api, ColumnID, CardID } from './api'
 import { useDispatch, useSelector } from 'react-redux'
-import { State as RootState, Action } from './reducer'
 
 type State = {
   columns?: {
@@ -25,9 +24,9 @@ type State = {
 
 export function App() {
   const dispatch = useDispatch()
-  const filterValue = useSelector((state: RootState) => state.filterValue)
+  const filterValue = useSelector((state) => state.filterValue)
   const setFilterValue = (value: string) => {
-    dispatch<Action>({
+    dispatch({
       type: 'Filter.SetFilter',
       payload: {
         value,
