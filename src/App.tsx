@@ -117,7 +117,7 @@ export function App() {
       payload: {
         columnID,
         cardID,
-      }
+      },
     })
 
     api('POST /v1/cards', {

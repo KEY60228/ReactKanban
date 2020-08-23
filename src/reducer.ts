@@ -63,30 +63,32 @@ export type Action =
   | {
       type: 'Dialog.CancelDelete'
     }
-  | 
-  {
-    type: 'Card.StartDragging'
-    payload: {
-      cardID: CardID
+  | {
+      type: 'Card.StartDragging'
+      payload: {
+        cardID: CardID
+      }
     }
-  } | {
-    type: 'Card.Drop'
-    payload: {
-      toID: CardID | ColumnID
+  | {
+      type: 'Card.Drop'
+      payload: {
+        toID: CardID | ColumnID
+      }
     }
-  } | {
-    type: 'InputForm.SetText'
-    payload: {
-      columnID: ColumnID
-      value: string
+  | {
+      type: 'InputForm.SetText'
+      payload: {
+        columnID: ColumnID
+        value: string
+      }
     }
-  } | {
-    type: 'InputForm.ConfirmInput'
-    payload: {
-      columnID: ColumnID
-      cardID: CardID
+  | {
+      type: 'InputForm.ConfirmInput'
+      payload: {
+        columnID: ColumnID
+        cardID: CardID
+      }
     }
-  }
 
 export const reducer: Reducer<State, Action> = produce(
   (draft: State, action: Action) => {
@@ -174,7 +176,7 @@ export const reducer: Reducer<State, Action> = produce(
       }
 
       case 'InputForm.SetText': {
-        const { columnID, value } =action.payload
+        const { columnID, value } = action.payload
 
         const column = draft.columns?.find(c => c.id === columnID)
         if (!column) return
@@ -184,6 +186,26 @@ export const reducer: Reducer<State, Action> = produce(
       }
 
       case 'InputForm.ConfirmInput': {
+        const { columnID, cardID } = action.payload
+
+        const column = draft.columns?.find(c => c.id === columnID)
+        if (!column?.cards) return
+
+        column.cards.unshift({
+          id: cardID,
+          text: column.text,
+        })
+        column.text = ''
+
+        const patch = reorderPatch(
+          draft.cardsOrder,
+          cardID,
+          draft.cardsOrder[columnID],
+        )
+        draft.cardsOrder = {
+          ...draft.cardsOrder,
+          ...patch,
+        }
         return
       }
 
