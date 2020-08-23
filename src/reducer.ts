@@ -74,6 +74,18 @@ export type Action =
     payload: {
       toID: CardID | ColumnID
     }
+  } | {
+    type: 'InputForm.SetText'
+    payload: {
+      columnID: ColumnID
+      value: string
+    }
+  } | {
+    type: 'InputForm.ConfirmInput'
+    payload: {
+      columnID: ColumnID
+      cardID: CardID
+    }
   }
 
 export const reducer: Reducer<State, Action> = produce(
@@ -158,6 +170,20 @@ export const reducer: Reducer<State, Action> = produce(
         draft.columns?.forEach(column => {
           column.cards = sortBy(unorderedCards, draft.cardsOrder, column.id)
         })
+        return
+      }
+
+      case 'InputForm.SetText': {
+        const { columnID, value } =action.payload
+
+        const column = draft.columns?.find(c => c.id === columnID)
+        if (!column) return
+
+        column.text = value
+        return
+      }
+
+      case 'InputForm.ConfirmInput': {
         return
       }
 
