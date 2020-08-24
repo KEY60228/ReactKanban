@@ -4,39 +4,42 @@ import styled from 'styled-components'
 import * as color from './color'
 import { PlusIcon } from './icon'
 import { InputForm as _InputForm } from './InputForm'
-import { CardID, ColumnID } from './api'
+import { ColumnID } from './api'
 import { useSelector } from 'react-redux'
 
 export const Column = ({
   id: columnID,
-  title,
-  cards: rawCards,
-  onTextCancel,
 }: {
   id: ColumnID
-  title?: string
-  cards?: {
-    id: CardID
-    text?: string
-  }[]
-  onTextCancel?(): void
 }) => {
-  const filterValue = useSelector(state => state.filterValue.trim())
-  const keywords = filterValue.toLowerCase().split(/\s+/g) ?? []
-  const cards = rawCards?.filter(({ text }) =>
-    keywords?.every(w => text?.toLowerCase().includes(w)),
-  )
+  const { column, cards, filtered, totalCount } = useSelector(state => {
+    const filterValue = state.filterValue.trim()
+    const filtered = Boolean(filterValue)
+    const keywords = filterValue.toLowerCase().split(/\s+/g)
 
-  const totalCount = rawCards?.length ?? -1
+    const column = state.columns?.find(c => c.id === columnID)
+    const cards = column?.cards?.filter(({text}) => {
+      return (
+        keywords.every(w => text?.toLowerCase().includes(w))
+      )
+    })
+    const totalCount = column?.cards?.length ?? -1
 
-  const [inputMode, setInputMode] = useState(false)
-
-  const toggleInput = () => setInputMode(v => !v)
-  const cancelInput = () => {
-    onTextCancel?.()
-  }
+    return { column, cards, filtered, totalCount }
+  })
 
   const draggingCardID = useSelector(state => state.draggingCardID)
+
+  const [inputMode, setInputMode] = useState(false)
+  const toggleInput = () => setInputMode(v => !v)
+
+  const cancelInput = () => setInputMode(false)
+
+  if (!column) {
+    return null
+  }
+
+  const { title } = column
 
   return (
     <Container>
@@ -57,7 +60,7 @@ export const Column = ({
         <Loading />
       ) : (
         <>
-          {filterValue && <ResultCount>{cards.length} results</ResultCount>}
+          {filtered && <ResultCount>{cards.length} results</ResultCount>}
 
           <VerticalScroll>
             {cards.map(({ id }, i) => (
