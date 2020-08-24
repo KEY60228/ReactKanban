@@ -4,24 +4,24 @@ import styled from 'styled-components'
 import * as color from './color'
 import { PlusIcon } from './icon'
 import { InputForm as _InputForm } from './InputForm'
-import { CardID } from './api'
+import { CardID, ColumnID } from './api'
 import { useSelector } from 'react-redux'
 
 export const Column = ({
+  id: columnID,
   title,
   cards: rawCards,
-  onCardDrop,
   text,
   onTextChange,
   onTextConfirm,
   onTextCancel,
 }: {
+  id: ColumnID
   title?: string
   cards?: {
     id: CardID
     text?: string
   }[]
-  onCardDrop?(entered: CardID | null): void
   text?: string
   onTextChange?(value: string): void
   onTextConfirm?(): void
@@ -74,11 +74,11 @@ export const Column = ({
             {cards.map(({ id }, i) => (
               <Card.DropArea
                 key={id}
+                targetID={id}
                 disabled={
                   draggingCardID !== undefined &&
                   (id === draggingCardID || cards[i - 1]?.id === draggingCardID)
                 }
-                onDrop={() => onCardDrop?.(id)}
               >
                 <Card
                   id = { id }
@@ -87,12 +87,12 @@ export const Column = ({
             ))}
 
             <Card.DropArea
+            targetID={columnID}
               style={{ height: '100%' }}
               disabled={
                 draggingCardID !== undefined &&
                 cards[cards.length - 1]?.id === draggingCardID
               }
-              onDrop={() => onCardDrop?.(null)}
             />
           </VerticalScroll>
         </>
