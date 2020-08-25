@@ -2,11 +2,19 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import * as color from './color'
 import { SearchIcon as _SearchIcon } from './icon'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useStore } from 'react-redux'
 
 export const CardFilter = () => {
+  const store = useStore()
   const dispatch = useDispatch()
   const [value, setValue] = useState('')
+
+  useEffect(() => store.subscribe(() => {
+    const { filterValue } = store.getState()
+    if (value === filterValue) return
+
+    setValue(filterValue)
+  }), [store, value])
 
   useEffect(() => {
     const timer = setTimeout(() => 
