@@ -12,14 +12,6 @@ export function App() {
 
   const columns = useSelector(state => state.columns)
 
-  const cardIsBeingDeleted = useSelector(state => Boolean(state.deletingCardID))
-
-  const cancelDelete = () => {
-    dispatch({
-      type: 'Dialog.CancelDelete',
-    })
-  }
-
   useEffect(() => {
     ;(async () => {
       const columns = await api('GET /v1/columns', null)
@@ -60,11 +52,7 @@ export function App() {
         </HorizontalScroll>
       </MainArea>
 
-      {cardIsBeingDeleted && (
-        <Overlay onClick={cancelDelete}>
-          <DeleteDialog />
-        </Overlay>
-      )}
+      <DialogOverlay />
     </Container>
   )
 }
@@ -108,6 +96,27 @@ const Loading = styled.div.attrs({
 })`
   font-size: 14px;
 `
+
+function DialogOverlay() {
+  const dispatch = useDispatch()
+  const cardIsBeingDeleted = useSelector(state => Boolean(state.deletingCardID))
+
+  const cancelDelete = () =>
+    dispatch({
+      type: 'Dialog.CancelDelete',
+    })
+
+  if (!cardIsBeingDeleted) {
+    return null
+  }
+
+  return (
+    <Overlay onClick={cancelDelete}>
+      <DeleteDialog />
+    </Overlay>
+  )
+}
+
 
 const Overlay = styled(_Overlay)`
   display: flex;
