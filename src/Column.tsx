@@ -5,7 +5,7 @@ import * as color from './color'
 import { PlusIcon } from './icon'
 import { InputForm as _InputForm } from './InputForm'
 import { ColumnID } from './api'
-import { useSelector } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 
 export const Column = ({
   id: columnID,
@@ -17,16 +17,19 @@ export const Column = ({
     const filtered = Boolean(filterValue)
     const keywords = filterValue.toLowerCase().split(/\s+/g)
 
-    const column = state.columns?.find(c => c.id === columnID)
-    const cards = column?.cards?.filter(({text}) => {
+    const { title, cards: rawCards } = state.columns?.find(c => c.id === columnID) ?? {}
+
+    const column = { title }
+    const cards = rawCards?.filter(({text}) => {
       return (
         keywords.every(w => text?.toLowerCase().includes(w))
       )
-    })
-    const totalCount = column?.cards?.length ?? -1
+    }).map(c => c.id)
+    const totalCount = rawCards?.length ?? -1
 
     return { column, cards, filtered, totalCount }
-  })
+  },
+  (left, right) => Object.keys(left).every(key => shallowEqual(left[key], right[key])),)
 
   const draggingCardID = useSelector(state => state.draggingCardID)
 
@@ -63,13 +66,13 @@ export const Column = ({
           {filtered && <ResultCount>{cards.length} results</ResultCount>}
 
           <VerticalScroll>
-            {cards.map(({ id }, i) => (
+            {cards.map((id, i) => (
               <Card.DropArea
                 key={id}
                 targetID={id}
                 disabled={
                   draggingCardID !== undefined &&
-                  (id === draggingCardID || cards[i - 1]?.id === draggingCardID)
+                  (id === draggingCardID || cards[i - 1] === draggingCardID)
                 }
               >
                 <Card
@@ -83,7 +86,7 @@ export const Column = ({
               style={{ height: '100%' }}
               disabled={
                 draggingCardID !== undefined &&
-                cards[cards.length - 1]?.id === draggingCardID
+                cards[cards.length - 1] === draggingCardID
               }
             />
           </VerticalScroll>
